@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" role="img" aria-label="Interview Practice Room">
+  <rect width="32" height="32" rx="7" fill="#1e4a38"/>
+  <path d="M8 7h10a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H8V7z" fill="#f4efe6"/>
+  <path d="M20 11h4.2a1 1 0 0 1 .8 1.6l-2.2 3 2.2 3a1 1 0 0 1-.8 1.6H20v-9z" fill="#e08a5a"/>
+</svg>
