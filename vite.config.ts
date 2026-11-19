@@ -4,6 +4,11 @@ import react from '@vitejs/plugin-react';
 export default defineConfig({
   base: './',
   plugins: [react()],
+  resolve: {
+    // The default onnxruntime-web entry embeds WebAssembly. This condition
+    // selects the build that loads those files from wasmPaths instead.
+    conditions: ['onnxruntime-web-use-extern-wasm'],
+  },
   optimizeDeps: {
     exclude: ['@huggingface/transformers', 'onnxruntime-web'],
   },

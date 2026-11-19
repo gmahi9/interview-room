@@ -77,7 +77,7 @@ export function createSpeechClient(workerFactory: () => Worker = defaultWorker):
       const current = ensure();
       return new Promise<void>((resolve, reject) => {
         readyWait = { resolve, reject, onProgress };
-        current.postMessage({ type: 'load', model, wasm: runtimeUrls() });
+        current.postMessage({ type: 'load', model, wasmSuffix: runtimeSuffix() });
       });
     },
     transcribe(audio) {
@@ -109,14 +109,9 @@ export function getSpeechClient(): SpeechClient {
   return sharedClient;
 }
 
-function runtimeUrls(): { wasm: string; mjs: string } {
+function runtimeSuffix(): '' | '.asyncify' {
   const ua = navigator.userAgent;
   const safari = /Safari\//.test(ua) && !/Chrome|Chromium|Edg\/|OPR\//.test(ua);
   const major = Number(/Version\/(\d+)/.exec(ua)?.[1] ?? '0');
-  const suffix = safari && major > 0 && major < 26 && !('gpu' in navigator) ? '' : '.asyncify';
-  const base = new URL('ort/', document.baseURI);
-  return {
-    wasm: new URL(`ort-wasm-simd-threaded${suffix}.wasm`, base).href,
-    mjs: new URL(`ort-wasm-simd-threaded${suffix}.mjs`, base).href,
-  };
+  return safari && major > 0 && major < 26 && !('gpu' in navigator) ? '' : '.asyncify';
 }
