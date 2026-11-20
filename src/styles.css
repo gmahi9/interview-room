@@ -63,9 +63,9 @@ h1, h2, h3, .prompt, .brand-name {
   line-height: 1.2;
 }
 
-h1 { font-size: clamp(2rem, 4vw, 3.3rem); margin: 0.2rem 0 0.6rem; }
-h2 { font-size: 1.45rem; margin: 0 0 0.6rem; }
-h3 { font-size: 1.05rem; margin: 0 0 0.35rem; }
+h1 { font-size: clamp(2rem, 1.4rem + 2.4vw, 3.25rem); letter-spacing: normal; margin: 0.2rem 0 0.6rem; }
+h2 { font-size: clamp(1.5rem, 1.2rem + 1.2vw, 2.25rem); margin: 0 0 0.6rem; }
+h3 { font-size: 1.25rem; margin: 0 0 0.35rem; }
 
 p { margin: 0.4rem 0; }
 
@@ -125,8 +125,8 @@ a:hover { text-decoration-thickness: 2px; }
 }
 
 .sheet-top { display: flex; justify-content: space-between; gap: 1rem; align-items: center; }
-.prompt { font-size: clamp(1.55rem, 3vw, 2.35rem); margin: 0.7rem 0; }
-.prompt-small { font-size: clamp(1.25rem, 2vw, 1.7rem); }
+.prompt { font-size: clamp(1.35rem, 1.15rem + 0.8vw, 1.75rem); margin: 0.7rem 0; }
+.prompt-small { font-size: clamp(1.2rem, 1.1rem + 0.4vw, 1.45rem); }
 .headline { font-size: 1.08rem; }
 .target, .fine { color: var(--muted); }
 
