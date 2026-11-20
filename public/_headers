@@ -1,11 +1,11 @@
 # Security headers for Interview Practice Room.
 # The speech runtime compiles WebAssembly and builds numeric call wrappers
 # when that module loads, so script-src allows those two capabilities.
-# Workers are created from blob URLs. Model files are fetched from Hugging Face.
-# Audio is never uploaded.
+# Workers are created from blob URLs. Runtime files load from jsDelivr.
+# Model files are fetched from Hugging Face. Audio is never uploaded.
 
 /*
-  Content-Security-Policy: default-src 'self'; base-uri 'self'; object-src 'none'; frame-ancestors 'none'; form-action 'self'; script-src 'self' 'wasm-unsafe-eval' 'unsafe-eval' blob:; style-src 'self'; style-src-attr 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self'; media-src 'self' blob:; connect-src 'self' blob: https://huggingface.co https://*.huggingface.co https://*.hf.co https://*.xethub.hf.co https://*.aws.cdn.hf.co; worker-src 'self' blob:; child-src 'self' blob:; manifest-src 'self'; upgrade-insecure-requests
+  Content-Security-Policy: default-src 'self'; base-uri 'self'; object-src 'none'; frame-ancestors 'none'; form-action 'self'; script-src 'self' 'wasm-unsafe-eval' 'unsafe-eval' blob: https://cdn.jsdelivr.net; style-src 'self'; style-src-attr 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self'; media-src 'self' blob:; connect-src 'self' blob: https://cdn.jsdelivr.net https://huggingface.co https://*.huggingface.co https://*.hf.co https://*.xethub.hf.co https://*.aws.cdn.hf.co; worker-src 'self' blob: https://cdn.jsdelivr.net; child-src 'self' blob: https://cdn.jsdelivr.net; manifest-src 'self'; upgrade-insecure-requests
   Permissions-Policy: microphone=(self), camera=(), geolocation=(), payment=(), usb=()
   X-Content-Type-Options: nosniff
   X-Frame-Options: DENY
@@ -16,7 +16,4 @@
   X-Permitted-Cross-Domain-Policies: none
 
 /assets/*
-  Cache-Control: public, max-age=31536000, immutable
-
-/ort/*
   Cache-Control: public, max-age=31536000, immutable

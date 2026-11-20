@@ -24,7 +24,7 @@ The bank has 360 original questions. Each one includes an interviewer note, an o
 
 - The recording and the transcript never leave the browser. There is no account and no upload of audio.
 - Transcription uses Whisper tiny English or base English through Transformers.js, inside a Web Worker. The model files download from Hugging Face the first time you transcribe, then the browser cache keeps them.
-- The speech runtime’s WebAssembly files are served with this site.
+- The speech runtime’s WebAssembly files load from jsDelivr, pinned to the installed onnxruntime-web version.
 - Session history is stored in `localStorage` on this browser. Clearing site data removes it.
 - No API key is required.
 
@@ -46,7 +46,7 @@ npm test
 npm run build
 ```
 
-`npm test` runs the analyzer, pause, scoring, and question-bank checks. `npm run build` copies the on-device speech runtime, typechecks, and writes a static site to `dist/`.
+`npm test` runs the analyzer, pause, scoring, and question-bank checks. `npm run build` typechecks, writes a static site to `dist/`, and fails if any output file is over 25 MiB.
 
 The Vite `base` is `./`, so the same build works at the root of a host and in a subpath.
 
@@ -58,7 +58,7 @@ This is a static site for Cloudflare Pages.
 - Output directory: `dist`
 - No environment variables
 
-`public/_headers` is copied into the build. It sets a strict content security policy (including `wasm-unsafe-eval` for the speech runtime, and `blob:` workers), `Permissions-Policy: microphone=(self)`, and connect rules limited to this site plus Hugging Face hosts used to download the speech model.
+`public/_headers` is copied into the build. It sets a strict content security policy (including `wasm-unsafe-eval` for the speech runtime, and `blob:` workers), `Permissions-Policy: microphone=(self)`, and connect rules limited to this site, jsDelivr for the speech runtime, and Hugging Face hosts used to download the speech model.
 
 Upload the same `dist` output for both:
 

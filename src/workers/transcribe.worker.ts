@@ -1,9 +1,7 @@
-import * as ort from 'onnxruntime-web/webgpu';
-
 type LoadMessage = {
   type: 'load';
   model: string;
-  wasm: { wasm: string; mjs: string };
+  wasmSuffix: '' | '.asyncify';
 };
 
 type TranscribeMessage = {
@@ -40,7 +38,27 @@ function post(data: Record<string, unknown>) {
   scope.postMessage(data);
 }
 
-async function ensureModel(model: string, wasm: { wasm: string; mjs: string }) {
+function configureRuntime(onnx: {
+  versions?: { web?: string };
+  wasm?: {
+    wasmPaths?: string | { wasm?: string | URL; mjs?: string | URL };
+    numThreads?: number;
+  };
+}, suffix: '' | '.asyncify') {
+  const version = onnx.versions?.web;
+  const wasm = onnx.wasm;
+  if (!version || !wasm) {
+    throw new Error('The speech runtime is unavailable.');
+  }
+  const base = `https://cdn.jsdelivr.net/npm/onnxruntime-web@${version}/dist/`;
+  wasm.wasmPaths = {
+    wasm: `${base}ort-wasm-simd-threaded${suffix}.wasm`,
+    mjs: `${base}ort-wasm-simd-threaded${suffix}.mjs`,
+  };
+  wasm.numThreads = 1;
+}
+
+async function ensureModel(model: string, wasmSuffix: '' | '.asyncify') {
   if (transcriber && loadedModel === model) {
     post({ type: 'ready', model });
     return;
@@ -48,10 +66,9 @@ async function ensureModel(model: string, wasm: { wasm: string; mjs: string }) {
   if (!loadPromise || loadedModel !== model) {
     loadedModel = model;
     transcriber = null;
-    ort.env.wasm.wasmPaths = wasm;
-    ort.env.wasm.numThreads = 1;
     loadPromise = (async () => {
       const { pipeline, env } = await import('@huggingface/transformers');
+      configureRuntime(env.backends.onnx, wasmSuffix);
       env.allowLocalModels = false;
       env.useBrowserCache = true;
       const created = await pipeline('automatic-speech-recognition', model, {
@@ -92,7 +109,7 @@ async function ensureModel(model: string, wasm: { wasm: string; mjs: string }) {
 scope.onmessage = (event: MessageEvent<InMessage>) => {
   const message = event.data;
   if (message.type === 'load') {
-    ensureModel(message.model, message.wasm)
+    ensureModel(message.model, message.wasmSuffix)
       .catch((error: unknown) => {
         post({
           type: 'error',
